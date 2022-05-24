@@ -124,7 +124,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   setState(() {
                     _isLoading = true;
                   });
-                  String res = await AuthMethods.signUpUser(
+                  String res = await AuthMethods().signUpUser(
                       userName: _userNameController.text,
                       password: _passwordController.text,
                       email: _emailController.text,
@@ -155,7 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(
-                          color: Colors.white,
+                          color: primaryColor,
                         )
                       : const Text('Sign Up'),
                 ),

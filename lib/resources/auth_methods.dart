@@ -7,10 +7,10 @@ import 'package:flutter/services.dart';
 import './storage_method.dart';
 
 class AuthMethods {
-  static final FirebaseAuth _auth = FirebaseAuth.instance;
-  static final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
-  static Future<String> signUpUser(
+  Future<String> signUpUser(
       {required String userName,
       required String password,
       required String email,
@@ -60,6 +60,21 @@ class AuthMethods {
       res = e.toString();
     }
     print(res);
+    return res;
+  }
+
+  Future<String> signInUser(String email, String password) async {
+    String res = 'Some error occurred';
+    try {
+      if (email.isEmpty || password.isEmpty) {
+        res = 'Please fill all fields';
+        return res;
+      }
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      res = 'success';
+    } catch (e) {
+      res = e.toString();
+    }
     return res;
   }
 }
