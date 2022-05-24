@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:rana_academy/models/insta_user.dart';
 
 import './storage_method.dart';
 
@@ -30,16 +31,20 @@ class AuthMethods {
           .uploadImageToStorage('userImages', imageFile, false);
       UserCredential userCred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      await _fireStore.collection('users').doc(userCred.user!.uid).set({
-        'userName': userName,
-        'userId': userCred.user!.uid,
-        'email': email,
-        'bio': bio,
-        'imageUrl': imageUrl,
-        'followers': [],
-        'following': [],
-      });
-      print(userCred.user!.uid);
+
+      InstaUser instaUser = InstaUser(
+          username: userName,
+          uid: userCred.user!.uid,
+          photoUrl: imageUrl,
+          email: email,
+          bio: bio,
+          followers: [],
+          following: []);
+
+      await _fireStore
+          .collection('users')
+          .doc(userCred.user!.uid)
+          .set(instaUser.toJson());
 
       //difference between set and add
 

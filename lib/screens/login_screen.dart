@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rana_academy/resources/auth_methods.dart';
-import 'package:rana_academy/screens/sign_up_screen.dart';
 
+import '../resources/auth_methods.dart';
+import '../screens/sign_up_screen.dart';
+import '../responsive/mobile_screen_layout.dart';
+import '../responsive/responsive_layout.dart';
+import '../responsive/web_screen_layout.dart';
 import '../widgets/text_field_input.dart';
 import '../utils/colors.dart';
 
@@ -77,6 +80,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context)
                         .showSnackBar(SnackBar(content: Text(res)));
+                  } else {
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const ResponsiveLayout(
+                          mobileScreenLayout: MobileScreenLayout(),
+                          webScreenLayout: WebScreenLayout(),
+                        ),
+                      ),
+                    );
                   }
                 },
                 child: Container(

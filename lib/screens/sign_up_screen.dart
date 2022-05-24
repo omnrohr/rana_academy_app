@@ -5,6 +5,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../resources/auth_methods.dart';
+import '../responsive/mobile_screen_layout.dart';
+import '../responsive/responsive_layout.dart';
+import '../responsive/web_screen_layout.dart';
 import '../utils/colors.dart';
 import '../widgets/text_field_input.dart';
 import '../utils/utils.dart';
@@ -133,9 +136,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   setState(() {
                     _isLoading = false;
                   });
-                  // ignore: use_build_context_synchronously
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(res)));
+                  if (res != 'success') {
+                    // ignore: use_build_context_synchronously
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(res)));
+                  } else {
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const ResponsiveLayout(
+                          mobileScreenLayout: MobileScreenLayout(),
+                          webScreenLayout: WebScreenLayout(),
+                        ),
+                      ),
+                    );
+                  }
                 },
                 child: Container(
                   width: double.infinity,
