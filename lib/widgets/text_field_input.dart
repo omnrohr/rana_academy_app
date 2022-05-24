@@ -22,8 +22,7 @@ class TextFieldInput extends StatelessWidget {
       borderRadius: const BorderRadius.all(
         Radius.circular(4.0),
       ),
-      borderSide:
-          Divider.createBorderSide(context, color: primaryColor, width: 1.0),
+      borderSide: Divider.createBorderSide(context),
     );
     return TextField(
       controller: textController,
@@ -36,7 +35,7 @@ class TextFieldInput extends StatelessWidget {
         contentPadding: EdgeInsets.all(8),
         label: Text(
           labelText,
-          style: TextStyle(color: primaryColor),
+          style: TextStyle(color: primaryColor.withOpacity(0.5)),
         ),
       ),
       keyboardType: keyboardType,
