@@ -1,0 +1,39 @@
+import 'dart:typed_data';
+import 'package:uuid/uuid.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rana_academy/models/posts.dart';
+import 'package:rana_academy/resources/storage_method.dart';
+
+class FirestoreMethods {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<String> uploadPost(Uint8List image, String description, String userId,
+      String userName, String profileImage) async {
+    String res = 'Some error occurred';
+    try {
+      String imageUrl =
+          await StorageMethod().uploadImageToStorage('posts', image, true);
+
+      String postId = Uuid().v1();
+      Post post = Post(
+          userName: userName,
+          uid: userId,
+          datePublished: DateTime.now(),
+          description: description,
+          postId: postId,
+          postUrl: imageUrl,
+          profileImage: profileImage,
+          likes: []);
+
+      await _firestore.collection('posts').doc(postId).set(
+            post.toJson(),
+          );
+      res = 'success';
+    } catch (e) {
+      res = e.toString();
+    }
+
+    return res;
+  }
+}
