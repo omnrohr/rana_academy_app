@@ -1,7 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:rana_academy/utils/colors.dart';
+import 'package:provider/provider.dart';
+import 'package:rana_academy/models/insta_user.dart';
+import 'package:rana_academy/providers/user_provider.dart';
 
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({Key? key}) : super(key: key);
@@ -30,9 +32,10 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
 
   @override
   Widget build(BuildContext context) {
+    InstaUser user = Provider.of<UserProvider>(context).getInstaUser;
     return Scaffold(
       body: Center(
-        child: Text('userName'),
+        child: Text(user.userName),
       ),
     );
   }

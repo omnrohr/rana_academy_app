@@ -11,6 +11,13 @@ class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
+  Future<InstaUser> getUserDetails() async {
+    User currUser = _auth.currentUser!;
+    DocumentSnapshot snapshot =
+        await _fireStore.collection('users').doc(currUser.uid).get();
+    return InstaUser.fromSnap(snapshot);
+  }
+
   Future<String> signUpUser(
       {required String userName,
       required String password,
@@ -27,15 +34,15 @@ class AuthMethods {
         res = 'Please fill all fields';
         return res;
       }
-      String imageUrl = await StorageMethod()
-          .uploadImageToStorage('userImages', imageFile, false);
       UserCredential userCred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      String imageUrl = await StorageMethod()
+          .uploadImageToStorage('userImages', imageFile, false);
 
       InstaUser instaUser = InstaUser(
-          username: userName,
+          userName: userName,
           uid: userCred.user!.uid,
-          photoUrl: imageUrl,
+          imageUrl: imageUrl,
           email: email,
           bio: bio,
           followers: [],
@@ -56,7 +63,7 @@ class AuthMethods {
       //   'followers': [],
       //   'following': [],
       // });
-      res = 'Success';
+      res = 'success';
     } on FirebaseAuthException catch (e) {
       res = (e.message as String);
     } on PlatformException catch (e) {
@@ -64,7 +71,6 @@ class AuthMethods {
     } catch (e) {
       res = e.toString();
     }
-    print(res);
     return res;
   }
 
