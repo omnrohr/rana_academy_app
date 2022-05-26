@@ -21,6 +21,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _image;
 
   final _descriptionController = TextEditingController();
+  bool _isLoading = false;
 
   void postImage(
     String userId,
@@ -28,7 +29,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
     String profileImage,
   ) async {
     FocusScope.of(context).requestFocus(FocusNode());
+    setState(() {
+      _isLoading = true;
+    });
     try {
+      if (_image == null || _descriptionController.text.isEmpty) {
+        showSnackBar('Please fill out the fields', context);
+        return;
+      }
+      ;
       String res = await FirestoreMethods().uploadPost(
         _image!,
         _descriptionController.text,
@@ -38,7 +47,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
       );
       if (res == 'success') {
         // ignore: use_build_context_synchronously
+
         showSnackBar('Posted!', context);
+        clearImage();
         // ignore: use_build_context_synchronously
       } else {
         // ignore: use_build_context_synchronously
@@ -47,6 +58,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
     } catch (e) {
       showSnackBar(e.toString(), context);
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   _selectImage(BuildContext ctx) async {
@@ -97,11 +111,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
     _descriptionController.dispose();
   }
 
+  void clearImage() {
+    setState(() {
+      _image = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final InstaUser instaUser =
         Provider.of<UserProvider>(context, listen: false).getInstaUser;
-    bool _isLoading = false;
 
     return _image == null
         ? Center(
@@ -115,7 +134,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
               backgroundColor: mobileBackgroundColor,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () {},
+                onPressed: clearImage,
               ),
               title: const Text('Post to'),
               actions: [
@@ -134,6 +153,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
             body: Column(
               children: [
+                _isLoading
+                    ? const LinearProgressIndicator()
+                    : const Padding(
+                        padding: EdgeInsets.only(top: 0),
+                      ),
+                const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
