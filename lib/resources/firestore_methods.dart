@@ -52,4 +52,33 @@ class FirestoreMethods {
       print(e.toString());
     }
   }
+
+  Future<String> postComment(String postId, String comment, String userId,
+      String userName, String userProfile) async {
+    String res = 'Some error occurred';
+
+    try {
+      if (comment.isEmpty) {
+        res = 'Please add a comment';
+        return res;
+      }
+      String commentId = Uuid().v1();
+      await _firestore
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .doc(commentId)
+          .set({
+        'userProfile': userProfile,
+        'userName': userName,
+        'userId': userId,
+        'publishDate': DateTime.now(),
+        'comment': comment,
+      });
+      res = 'Posted';
+    } catch (e) {
+      res = e.toString();
+    }
+    return res;
+  }
 }

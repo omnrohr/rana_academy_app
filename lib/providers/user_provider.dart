@@ -8,9 +8,10 @@ class UserProvider extends ChangeNotifier {
 
   InstaUser get getInstaUser => _instaUser!;
 
-  Future<void> refreshInstaUser() async {
+  Future<InstaUser> refreshInstaUser() async {
     InstaUser user = await _authMethods.getUserDetails();
     _instaUser = user;
     notifyListeners();
+    return _instaUser!;
   }
 }

@@ -35,18 +35,19 @@ class FeedsScreen extends StatelessWidget {
               return const Center(
                 child: CircularProgressIndicator(),
               );
+            } else {
+              return snapshots.hasData
+                  ? ListView.builder(
+                      itemBuilder: (context, index) =>
+                          PostCard(snap: snapshots.data!.docs[index]),
+                      itemCount: snapshots.data!.docs.length,
+                    )
+                  : const Center(
+                      child: CircularProgressIndicator(
+                        color: primaryColor,
+                      ),
+                    );
             }
-            return snapshots.hasData
-                ? ListView.builder(
-                    itemBuilder: ((context, index) =>
-                        PostCard(snap: snapshots.data!.docs[index])),
-                    itemCount: snapshots.data!.docs.length,
-                  )
-                : const Center(
-                    child: CircularProgressIndicator(
-                      color: primaryColor,
-                    ),
-                  );
           },
         ),
       ),
